@@ -17,7 +17,6 @@ from langchain.prompts import ChatPromptTemplate
 def get_vectorstore():
     with open("customs_knowledge_base.txt", "r", encoding="utf-8") as f:
         kb_text = f.read()
-    # Note: Must use a list of tuples: (header_marker, header_name)
     splitter = MarkdownHeaderTextSplitter(headers_to_split_on=[("---", "Section")])
     docs = splitter.split_text(kb_text)
     embeddings = OpenAIEmbeddings()
@@ -26,7 +25,7 @@ def get_vectorstore():
 
 vectorstore = get_vectorstore()
 
-# ---- System prompt with friendly/few-shot handling ----
+# ---- System prompt ----
 system_prompt = (
     "You are a Singapore Customs information assistant. "
     "Always answer using only the provided customs knowledge base (shown as {context}). "
@@ -112,15 +111,15 @@ for role, msg in st.session_state.chat_messages:
 
 def send_message():
     user_input_raw = st.session_state["user_input"]
-    user_input = user_input_raw.strip().lower()
+    user_input_clean = user_input_raw.strip().lower()
     st.session_state.chat_messages.append(("user", user_input_raw))
 
-    # Friendly closing for soft close phrases BEFORE querying RAG!
+    # Exact-match closing phrases only (prevents Malay word "rokok" from triggering "ok")
     closing_phrases = [
         "okay", "ok", "thanks", "thank you", "noted", "alright", "got it", "great", "bye",
         "noted thanks", "noted with thanks", "appreciate", "thanksss"
     ]
-    if any(phrase in user_input for phrase in closing_phrases):
+    if any(user_input_clean == phrase for phrase in closing_phrases):
         closing_reply = "Thank you! If you have more questions about Singapore Customs, just let me know."
         st.session_state.chat_messages.append(("assistant", closing_reply))
     else:
@@ -131,6 +130,7 @@ def send_message():
         answer = result["answer"]
         st.session_state.chat_messages.append(("assistant", answer))
         st.session_state.chat_history.append((user_input_raw, answer))
+
     st.session_state["user_input"] = ""
 
 st.text_input(
@@ -144,24 +144,3 @@ if st.button("Reset Conversation"):
     st.session_state.chat_messages = []
     st.session_state.chat_history = []
     st.rerun()
-
-# Optional: Show referenced chunks for transparency/debugging
-if st.session_state.get("chat_messages"):
-    last = st.session_state.chat_messages[-1][1]
-    if last:
-        with st.expander("See referenced knowledge base chunks"):
-            if "user_input" in st.session_state and st.session_state["user_input"] == "":
-                if st.session_state.chat_messages:
-                    last_user = ""
-                    for role, msg in reversed(st.session_state.chat_messages):
-                        if role == "user":
-                            last_user = msg
-                            break
-                    if last_user:
-                        result = conversational_chain({
-                            "question": last_user,
-                            "chat_history": st.session_state.chat_history[:-1]
-                        })
-                        for i, doc in enumerate(result["source_documents"]):
-                            st.markdown(f"**Chunk {i+1}:**")
-                            st.write(doc.page_content)
