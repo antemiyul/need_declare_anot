@@ -1,0 +1,16 @@
+# Core app
+streamlit==1.45.1
+python-dotenv
+openai==1.93.0
+tiktoken==0.9.0
+
+# LangChain ecosystem
+langchain==0.3.26
+langchain-community==0.3.27
+langchain-openai==0.3.27
+langchain-text-splitters==0.3.8
+faiss-cpu==1.11.0
+
+# Chunk visualisation & parsing
+markdown
+beautifulsoup4

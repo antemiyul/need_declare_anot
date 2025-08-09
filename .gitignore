@@ -1,0 +1,16 @@
+# Virtual environment
+.venv/
+venv/
+
+# Environment variables
+.env
+.streamlit/secrets.toml
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# OS & editor junk
+.DS_Store
+.vscode/
