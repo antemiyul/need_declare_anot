@@ -32,7 +32,7 @@ system_prompt = (
     "Be factual, concise, professional, and warm in tone. "
     "For simple greetings or acknowledgments (e.g., 'thanks', 'ok', 'bye'), "
     "reply politely without repeating regulations unless asked. "
-    "Do not pretend to be an officer or give advice outside official customs rules. "
+    "Do not pretend to be any other officer or give advice outside official customs rules. "
     "If unsure, politely say you don't know."
 )
 
@@ -55,7 +55,7 @@ conversational_chain = ConversationalRetrievalChain.from_llm(
 )
 
 # ---- UI ----
-st.caption("Type your question about customs. Press Enter to send!")
+st.caption("Type your question about Customs Regulations. Press Enter to send!")
 
 if "chat_messages" not in st.session_state:
     st.session_state.chat_messages = []
@@ -85,16 +85,31 @@ for role, msg in st.session_state.chat_messages:
     else:
         st.markdown(assistant_bubble.format(msg=msg), unsafe_allow_html=True)
 
+def is_closing_message(text):
+    """Return True if message is only a closing/acknowledgment."""
+    closing_keywords = [
+        "ok", "okay", "okey", "oklah", "ok la",
+        "thanks", "thank you", "terima kasih",
+        "alright", "bye", "noted", "great", "appreciate"
+    ]
+    lower_text = text.lower()
+
+    # Must contain a closing keyword
+    if not any(kw in lower_text for kw in closing_keywords):
+        return False
+
+    # If contains question marks or customs-related keywords → not a pure closing
+    customs_keywords = ["bring", "can i", "boleh", "allowed", "allow", "cigarette", "wine", "beer", "liquor", "?"]
+    if any(word in lower_text for word in customs_keywords):
+        return False
+
+    return True
+
 def send_message():
     user_input = st.session_state["user_input"].strip()
     st.session_state.chat_messages.append(("user", user_input))
 
-    # Keyword-based soft close detection
-    closing_keywords = [
-        "ok", "okay", "okey", "oklah", "ok la", "thanks", "thank you", "terima kasih",
-        "alright", "bye", "noted", "great", "appreciate"
-    ]
-    if any(kw in user_input.lower() for kw in closing_keywords):
+    if is_closing_message(user_input):
         closing_reply = "You're welcome! Let me know if you have any other questions about Singapore Customs."
         st.session_state.chat_messages.append(("assistant", closing_reply))
     else:
