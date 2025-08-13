@@ -1,7 +1,8 @@
 import streamlit as st
 
+st.image("images/about_us.svg", width=250)
+
 with st.expander("⚠️ Important Notice", expanded=True):
-    st.image("images/about_us.svg", width=100)  # adjust width as needed
     st.write("""
     This web application is a prototype developed for educational purposes only. 
     The information provided here is NOT intended for real-world usage and should not be relied upon 
