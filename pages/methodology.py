@@ -34,9 +34,15 @@ Both use cases rely on:
 st.markdown("---")
 st.header("Declaration Assessment")
 
-st.image("images/declaration_assessment_flowchart.svg", 
-         caption="Declaration Assessment – Process Flow", 
-         use_container_width=True)
+flowchart_path = "images/declaration_assessment_flowchart.svg"
+st.markdown(
+    f"""
+    <a href="{flowchart_path}" target="_blank">
+        <img src="{flowchart_path}" alt="Declaration Assessment – Process Flow" style="width:100%; border:1px solid #ccc;">
+    </a>
+    """,
+    unsafe_allow_html=True
+)
 
 st.markdown("""
 **Narrative:**
@@ -51,7 +57,7 @@ Finally, it suggests the user try **Ask The Assistant** for more detailed guidan
 st.markdown("---")
 st.header("Ask The Assistant")
 
-# Placeholder for image & narrative to be added later
+# Placeholder for future flowchart
 st.info("Flowchart and methodology for this feature will be added later.")
 
 # ------------------------
