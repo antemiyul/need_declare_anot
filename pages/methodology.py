@@ -34,15 +34,10 @@ Both use cases rely on:
 st.markdown("---")
 st.header("Declaration Assessment")
 
-flowchart_path = "images/declaration_assessment_flowchart.svg"
-st.markdown(
-    f"""
-    <a href="{flowchart_path}" target="_blank">
-        <img src="{flowchart_path}" alt="Declaration Assessment – Process Flow" style="width:100%; border:1px solid #ccc;">
-    </a>
-    """,
-    unsafe_allow_html=True
-)
+flowchart_path = "images/declaration_assessment_flowchart.png"
+
+# Link to open in new tab
+st.markdown(f"[![flowchart]({flowchart_path})]({flowchart_path})", unsafe_allow_html=True)
 
 st.markdown("""
 **Narrative:**
