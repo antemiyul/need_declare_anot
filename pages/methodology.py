@@ -34,11 +34,15 @@ Both use cases rely on:
 st.markdown("---")
 st.header("Declaration Assessment")
 
-flowchart_path = "images/declaration_assessment_flowchart.png"
+flowchart_path = "images/declaration_assessment_flowchart.svg"
 
-# Link to open in new tab
-st.markdown(f"[![flowchart]({flowchart_path})]({flowchart_path})", unsafe_allow_html=True)
+# Display image
+st.image(flowchart_path, caption="Declaration Assessment – Process Flow", use_container_width=True)
 
+# Zoom link
+st.markdown(f"[🔍 Click here to view full size]({flowchart_path})")
+
+# Narrative
 st.markdown("""
 **Narrative:**
 The Declaration Assessment feature guides the user through a series of questions about their citizenship status, travel duration, country of arrival, and whether they are bringing liquor.  
