@@ -1,5 +1,4 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
 # ========================
 #   METHODOLOGY PAGE
@@ -35,23 +34,8 @@ Both use cases rely on:
 st.markdown("---")
 st.header("Declaration Assessment")
 
-st.markdown("**Interactive Zoomable Flowchart:**")
-
-# OpenSeadragon viewer
-components.html(f"""
-<div id="openseadragon" style="width: 100%; height: 650px;"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/openseadragon.min.js"></script>
-<script type="text/javascript">
-  OpenSeadragon({{
-    id: "openseadragon",
-    prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/images/",
-    tileSources: {{
-      type: 'image',
-      url: 'images/declaration_assessment_flowchart.svg'
-    }}
-  }});
-</script>
-""", height=650)
+flowchart_path = "images/declaration_assessment_flowchart.svg"
+st.image(flowchart_path, caption="Declaration Assessment – Process Flow", use_container_width=True)
 
 st.markdown("""
 **Narrative:**
@@ -66,6 +50,7 @@ Finally, it suggests the user try **Ask The Assistant** for more detailed guidan
 st.markdown("---")
 st.header("Ask The Assistant")
 
+# Placeholder for future flowchart
 st.info("Flowchart and methodology for this feature will be added later.")
 
 # ------------------------
