@@ -107,20 +107,65 @@ def is_closing_message(text):
 
 def send_message():
     user_input = st.session_state["user_input"].strip()
+    if not user_input:
+        return
+
+    # Append user message
     st.session_state.chat_messages.append(("user", user_input))
 
     if is_closing_message(user_input):
         closing_reply = "You're welcome! Let me know if you have any other questions about Singapore Customs."
+
+        # Typing simulation with "..."
+        placeholder = st.empty()
+        placeholder.markdown(
+            assistant_bubble.format(msg="💬 ..."),
+            unsafe_allow_html=True
+        )
+        time.sleep(1)
+
+        # Typing effect
+        displayed_text = ""
+        for word in closing_reply.split():
+            displayed_text += word + " "
+            placeholder.markdown(
+                assistant_bubble.format(msg=displayed_text.strip()),
+                unsafe_allow_html=True
+            )
+            time.sleep(0.03)
+
         st.session_state.chat_messages.append(("assistant", closing_reply))
+
     else:
+        # Simulate assistant typing with "..."
+        placeholder = st.empty()
+        placeholder.markdown(
+            assistant_bubble.format(msg="💬 ..."),
+            unsafe_allow_html=True
+        )
+        time.sleep(1)
+
+        # Get LLM answer
         result = conversational_chain({
             "question": user_input,
             "chat_history": st.session_state.chat_history
         })
         answer = result["answer"]
-        st.session_state.chat_messages.append(("assistant", answer))
         st.session_state.chat_history.append((user_input, answer))
 
+        # Typing effect (word by word)
+        displayed_text = ""
+        for word in answer.split():
+            displayed_text += word + " "
+            placeholder.markdown(
+                assistant_bubble.format(msg=displayed_text.strip()),
+                unsafe_allow_html=True
+            )
+            time.sleep(0.03)
+
+        st.session_state.chat_messages.append(("assistant", answer))
+
+    st.session_state["user_input"] = ""
     st.session_state["user_input"] = ""
 
 st.text_input(
