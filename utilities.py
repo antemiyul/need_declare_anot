@@ -86,27 +86,32 @@ def get_system_prompt(context):
 #            Password Protection
 # --------------------------------------------------
 
+import hmac
+import streamlit as st
+
 def check_password():
     """Returns True if the user entered the correct password."""
-    
-    def password_entered():
-        """Check if the password is correct."""
-        if hmac.compare_digest(st.session_state["password"], st.secrets["password"]):
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]  # Don't store the password
-        else:
-            st.session_state["password_correct"] = False
 
     # Already logged in
     if st.session_state.get("password_correct", False):
         return True
 
-    # Prompt for password
-    st.text_input("Password", type="password", on_change=password_entered, key="password")
+    # Layout: password field + button side by side
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        password_input = st.text_input("Password", type="password", key="password_input")
+    with col2:
+        if st.button("Enter"):
+            if hmac.compare_digest(password_input, st.secrets["password"]):
+                st.session_state["password_correct"] = True
+                st.experimental_rerun()
+            else:
+                st.session_state["password_correct"] = False
 
     # Show error if wrong
-    if "password_correct" in st.session_state:
+    if "password_correct" in st.session_state and not st.session_state["password_correct"]:
         st.error("😕 Password incorrect")
+
     return False
 
 def gated_page():
@@ -115,7 +120,6 @@ def gated_page():
     Hides the sidebar navigation for unauthorized users.
     """
     if not check_password():
-        # Hide sidebar navigation
         st.markdown(
             "<style>div[data-testid='stSidebarNav'] {display: none;}</style>",
             unsafe_allow_html=True
