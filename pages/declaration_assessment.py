@@ -2,7 +2,7 @@ import streamlit as st
 
 st.set_page_config(page_title="Declaration Assessment", layout="centered")
 
-st.header("🛃 Declaration Assessment")
+st.header("Declaration Assessment")
 st.markdown(
     """
     This assessment will help you determine if you are required to declare your goods or are eligible for duty-free concessions.
@@ -62,17 +62,15 @@ if check_btn:
         render_channel_section("Red", gst_text)
     else:
         gst_relief = "S$500" if away_48 == "48 hours or more" else "S$100"
-        gst_text = f"✅ <b>GST Relief</b>: You’re eligible for {gst_relief}"
+        gst_text = f"""
+        ✅ <b>GST Relief</b>: You’re eligible for {gst_relief}<br><br>
+        <span style="font-size: 0.95rem;">
+        💡 <b>Reminder:</b> If the total value of your goods exceeds <b>{gst_relief}</b>,<br>
+        you will need to pay <b>9% GST</b> on the excess amount.<br>
+        Please proceed to the <b>Customs Tax Payment Office</b> upon arrival to make payment.
+        </span>
+        """
         render_channel_section("Green", gst_text)
-
-        # GST Payment Reminder
-        st.markdown(f"""
-        <div style="background-color:#fff4e5; border-left: 6px solid #f59e0b; padding: 1rem; margin-top: 0.8rem; border-radius: 6px;">
-            <strong>💡 Reminder:</strong><br>
-            If the total value of your goods exceeds <strong>{gst_relief}</strong>, you will need to pay <strong>9% GST</strong> on the excess amount.<br>
-            Please proceed to the <strong>Customs Tax Payment Office</strong> upon arrival to make payment.
-        </div>
-        """, unsafe_allow_html=True)
 
     # === Liquor Section ===
     if bringing_liquor == "No":
@@ -80,14 +78,19 @@ if check_btn:
         render_channel_section("Green", liquor_text)
     elif liquor_eligible:
         liquor_text = """
-        ✅ You are eligible for one of the following duty-free options:<br>
-        - 1L Spirits + 1L Wine<br>
-        - 1L Spirits + 1L Beer<br>
-        - 1L Wine + 1L Beer<br>
-        - 2L Wine<br>
-        - 2L Beer
-        <br><br>
-        📌 Please select only one option. Any excess must be declared.
+        ✅ You are eligible for <b>one</b> of the following duty-free options:
+        <ul style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+            <li>1L Spirits + 1L Wine</li>
+            <li>1L Spirits + 1L Beer</li>
+            <li>1L Wine + 1L Beer</li>
+            <li>2L Wine</li>
+            <li>2L Beer</li>
+        </ul>
+        <span style="font-size: 0.95rem;">
+        📌 <b>Reminder:</b> If you bring in liquor that exceeds the above duty-free allowances,<br>
+        the excess quantity must be declared and is subject to duty and GST.<br>
+        Please proceed to the <b>Customs Tax Payment Office</b> to make payment.
+        </span>
         """
         render_channel_section("Green", liquor_text)
     else:
