@@ -63,7 +63,15 @@ if check_btn:
         liquor_status = "✅ Not bringing liquor."
         liquor_channel = "Green"
     elif liquor_eligible:
-        liquor_status = "✅ Eligible for duty-free (choose 1 option: 1L+1L or 2L total). Declare if you exceed."
+        liquor_status = """✅ Eligible for duty-free: choose one of the following:<br>
+<ul style='margin-top: 0.5rem; margin-bottom: 0.5rem;'>
+    <li>1L Spirits + 1L Wine</li>
+    <li>1L Spirits + 1L Beer</li>
+    <li>1L Wine + 1L Beer</li>
+    <li>2L Wine</li>
+    <li>2L Beer</li>
+</ul>
+Declare if you exceed."""
         liquor_channel = "Green"
     else:
         liquor_status = "❌ Not eligible for duty-free liquor. Must declare."
@@ -73,7 +81,7 @@ if check_btn:
     cigs_status = "❌ No duty-free concession for cigarettes or tobacco. Must declare."
     cigs_channel = "Red"
 
-    # Visual Summary Output
+
     st.markdown("### 🧾 Summary of Your Declaration Requirements")
 
     for icon, label, status, channel in [
