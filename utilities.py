@@ -88,52 +88,43 @@ def get_system_prompt(context):
 
 def check_password():
     """Returns True if the user entered the correct password."""
+    
+    def password_entered():
+        """Check if the password is correct."""
+        if hmac.compare_digest(st.session_state["password"], st.secrets["password"]):
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]  # Don't store the password
+        else:
+            st.session_state["password_correct"] = False
 
+    # Already logged in
     if st.session_state.get("password_correct", False):
         return True
 
-    def verify_password():
-        if hmac.compare_digest(st.session_state["password_input"], st.secrets["password"]):
-            st.session_state["password_correct"] = True
-            st.rerun()
-        else:
-            st.session_state["password_correct"] = False
-            st.session_state["password_input"] = ""
+    # Instruction text
+    st.markdown("**Please type your password and press `Enter` to continue.**")
 
-    # Align button with password box
-    st.markdown(
-        """
-        <style>
-        div[data-testid="column"] > div > div > div:nth-child(1) {
-            display: flex;
-            align-items: center;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
+    # Prompt for password
+    st.text_input(
+        "Password",
+        type="password",
+        on_change=password_entered,
+        key="password"
     )
 
-    col1, col2 = st.columns([3, 0.5])
-    with col1:
-        st.text_input(
-            "Password",
-            type="password",
-            key="password_input",
-            on_change=verify_password
-        )
-    with col2:
-        # You can try "➡️", "🔑", "▶️", or "→"
-        st.button("➡️", on_click=verify_password)
-
-    if "password_correct" in st.session_state and not st.session_state["password_correct"]:
+    # Show error if wrong
+    if "password_correct" in st.session_state:
         st.error("😕 Password incorrect")
-
     return False
 
 def gated_page():
+    """
+    Blocks page access until the correct password is entered.
+    Hides the sidebar navigation for unauthorized users.
+    """
     if not check_password():
+        # Hide sidebar navigation
         st.markdown(
             "<style>div[data-testid='stSidebarNav'] {display: none;}</style>",
             unsafe_allow_html=True
         )
-        st.stop()
