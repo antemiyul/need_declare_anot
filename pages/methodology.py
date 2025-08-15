@@ -67,29 +67,3 @@ When a user sends a message:
 6. The assistant’s reply is appended to the conversation and displayed in the chat interface.
 Users can reset the conversation at any time to start fresh.
 """)
-
-# ------------------------
-# TECHNICAL NOTES
-# ------------------------
-st.markdown("---")
-st.subheader("Technical Notes")
-st.markdown("""
-- **Programming Language:** Python 3.11
-- **Framework:** Streamlit
-- **LLM Provider:** OpenAI GPT-4 API
-- **Data Processing:** Pandas for rule checks and LangChain for retrieval-based Q&A
-- **Deployment:** Local prototype; can be hosted on Streamlit Community Cloud
-""")
-
-# ------------------------
-# LIMITATIONS & NEXT STEPS
-# ------------------------
-st.subheader("Limitations & Future Improvements")
-st.markdown("""
-- The LLM may generate outdated or inaccurate responses if official rules change.
-- No live integration with Singapore Customs' backend systems.
-- Future versions could add:
-    - Real-time API connections to official sources.
-    - Multilingual support for travellers.
-    - Mobile-friendly design improvements.
-""")
