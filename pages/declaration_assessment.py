@@ -39,69 +39,57 @@ bringing_liquor = st.radio(
 
 check_btn = st.button("✅ Check My Allowance", use_container_width=True, key="ndn_check_btn")
 
-def render_channel_section(channel, content):
-    color = "#d1fae5" if channel == "Green" else "#fee2e2"
-    border = "#10b981" if channel == "Green" else "#ef4444"
-    st.markdown(f"""
-    <div style="background-color:{color}; border-left: 8px solid {border}; padding: 1.2rem; border-radius: 8px; margin-top:1rem;">
-        <h4 style='margin-top:0;'>{'🟢' if channel == 'Green' else '🔴'} {channel} Channel</h4>
-        {content}
-    </div>
-    """, unsafe_allow_html=True)
+def get_channel_icon(channel):
+    return "🟢 Green Channel" if channel == "Green" else "🔴 Red Channel"
 
 if check_btn:
+    # Determine GST outcome
+    if citizenship == "Pass Holder":
+        gst_status = "❌ Not eligible for GST relief."
+        gst_channel = "Red"
+    else:
+        gst_limit = 500 if away_48 == "48 hours or more" else 100
+        gst_status = f"✅ Eligible for S${gst_limit} GST relief. Declare if goods exceed this amount."
+        gst_channel = "Green"
+
+    # Determine Liquor outcome
     liquor_eligible = (
         bringing_liquor == "Yes"
         and away_48 == "48 hours or more"
         and from_malaysia == "No"
     )
 
-    # === GST Section ===
-    if citizenship == "Pass Holder":
-        gst_text = "❌ Pass holders are not eligible for GST import relief."
-        render_channel_section("Red", gst_text)
-    else:
-        gst_relief = "S$500" if away_48 == "48 hours or more" else "S$100"
-        gst_text = f"""
-        ✅ <b>GST Relief</b>: You’re eligible for {gst_relief}<br><br>
-        <span style="font-size: 0.95rem;">
-        💡 <b>Reminder:</b> If the total value of your goods exceeds <b>{gst_relief}</b>,<br>
-        you will need to pay <b>9% GST</b> on the excess amount.<br>
-        Please proceed to the <b>Customs Tax Payment Office</b> upon arrival to make payment.
-        </span>
-        """
-        render_channel_section("Green", gst_text)
-
-    # === Liquor Section ===
     if bringing_liquor == "No":
-        liquor_text = "✅ Not bringing liquor. No declaration needed."
-        render_channel_section("Green", liquor_text)
+        liquor_status = "✅ Not bringing liquor."
+        liquor_channel = "Green"
     elif liquor_eligible:
-        liquor_text = """
-        ✅ You are eligible for <b>one</b> of the following duty-free options:
-        <ul style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
-            <li>1L Spirits + 1L Wine</li>
-            <li>1L Spirits + 1L Beer</li>
-            <li>1L Wine + 1L Beer</li>
-            <li>2L Wine</li>
-            <li>2L Beer</li>
-        </ul>
-        <span style="font-size: 0.95rem;">
-        📌 <b>Reminder:</b> If you bring in liquor that exceeds the above duty-free allowances,<br>
-        the excess quantity must be declared and is subject to duty and GST.<br>
-        Please proceed to the <b>Customs Tax Payment Office</b> to make payment.
-        </span>
-        """
-        render_channel_section("Green", liquor_text)
+        liquor_status = "✅ Eligible for duty-free (choose 1 option: 1L+1L or 2L total). Declare if you exceed."
+        liquor_channel = "Green"
     else:
-        liquor_text = "❌ <b>Liquor</b>: You are <b>not eligible</b> for duty-free liquor. All liquor must be declared."
-        render_channel_section("Red", liquor_text)
+        liquor_status = "❌ Not eligible for duty-free liquor. Must declare."
+        liquor_channel = "Red"
 
-    # === Cigarettes Section ===
-    cigs_text = "❌ <b>Cigarettes and Tobacco</b>: No duty-free concession. All must be declared, even if purchased in Singapore."
-    render_channel_section("Red", cigs_text)
+    # Determine Cigarettes outcome
+    cigs_status = "❌ No duty-free concession for cigarettes or tobacco. Must declare."
+    cigs_channel = "Red"
 
-    # === Footer Suggestion ===
+    # Visual Summary Output
+    st.markdown("### 🧾 Summary of Your Declaration Requirements")
+
+    for icon, label, status, channel in [
+        ("💰", "GST Relief", gst_status, gst_channel),
+        ("🍾", "Liquor", liquor_status, liquor_channel),
+        ("🚬", "Cigarettes & Tobacco", cigs_status, cigs_channel),
+    ]:
+        st.markdown(f"""
+        <div style="border: 2px solid {'#10b981' if channel == 'Green' else '#ef4444'}; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+            <h4 style="margin: 0 0 0.5rem 0;">{icon} {label}</h4>
+            <p style="margin: 0.2rem 0; font-size: 0.95rem;">{status}</p>
+            <strong style="font-size: 1rem;">{get_channel_icon(channel)}</strong>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Footer Suggestion
     st.markdown(
         """<div style="width:100%; text-align:center; margin-top:2rem;">
         <span style="font-size:1.04rem; color:#2563eb; font-weight:500;">
