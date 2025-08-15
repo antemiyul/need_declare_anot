@@ -45,7 +45,7 @@ def get_channel_icon(channel):
 if check_btn:
     # Determine GST outcome
     if citizenship == "Pass Holder":
-        gst_status = "❌ Not eligible for GST relief."
+        gst_status = "Not eligible for GST relief."
         gst_channel = "Red"
     else:
         gst_limit = 500 if away_48 == "48 hours or more" else 100
