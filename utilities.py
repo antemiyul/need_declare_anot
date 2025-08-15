@@ -100,17 +100,11 @@ def check_password():
     # Already logged in
     if st.session_state.get("password_correct", False):
         return True
-
-    # Instruction text
+    
     st.markdown("**Please type your password and press `Enter` to continue.**")
 
     # Prompt for password
-    st.text_input(
-        "Password",
-        type="password",
-        on_change=password_entered,
-        key="password"
-    )
+    st.text_input("Password", type="password", on_change=password_entered, key="password")
 
     # Show error if wrong
     if "password_correct" in st.session_state:
@@ -128,3 +122,4 @@ def gated_page():
             "<style>div[data-testid='stSidebarNav'] {display: none;}</style>",
             unsafe_allow_html=True
         )
+        st.stop()
