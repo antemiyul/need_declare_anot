@@ -50,8 +50,23 @@ Finally, it suggests the user try **Ask The Assistant** for more detailed guidan
 st.markdown("---")
 st.header("Ask The Assistant")
 
-# Placeholder for future flowchart
-st.info("Flowchart and methodology for this feature will be added later.")
+ask_flowchart_path = "images/ask_the_assistant_flowchart.svg"
+st.image(ask_flowchart_path, caption="Ask The Assistant – Process Flow", use_container_width=True)
+
+st.markdown("""
+**Narrative:**
+The Ask The Assistant feature allows travellers to type in free-text questions about customs regulations.  
+When a user sends a message:
+1. The system checks if the message is empty. If so, it waits for further input.
+2. It appends valid messages to the chat history.
+3. If the message is identified as a closing remark, the system sends a polite closing response.
+4. Otherwise, the question is processed through a retrieval chain that:
+   - Searches the embedded knowledge base for relevant context.
+   - Passes this context to the GPT-4 model with strict system instructions to only use official customs information.
+5. The LLM generates a factual, concise, and warm response.
+6. The assistant’s reply is appended to the conversation and displayed in the chat interface.
+Users can reset the conversation at any time to start fresh.
+""")
 
 # ------------------------
 # TECHNICAL NOTES
