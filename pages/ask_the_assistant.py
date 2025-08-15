@@ -106,58 +106,25 @@ def is_closing_message(text):
     return True
 
 def send_message():
-    import time
-
     user_input = st.session_state["user_input"].strip()
     if not user_input:
         return
 
-    # Append the user's message to history
+    # Append user's message immediately
     st.session_state.chat_messages.append(("user", user_input))
 
     if is_closing_message(user_input):
         closing_reply = "You're welcome! Let me know if you have any other questions about Singapore Customs."
-
-        # Simulate assistant "..." typing
-        st.session_state["temp_assistant_reply"] = "💬 ..."
-        time.sleep(1)
-
-        # Typing effect for assistant reply
-        displayed_text = ""
-        for word in closing_reply.split():
-            displayed_text += word + " "
-            st.session_state["temp_assistant_reply"] = displayed_text.strip()
-            time.sleep(0.03)
-
-        # Finalize message into chat history
         st.session_state.chat_messages.append(("assistant", closing_reply))
-        st.session_state.pop("temp_assistant_reply", None)
-
     else:
-        # Simulate assistant "..." typing
-        st.session_state["temp_assistant_reply"] = "💬 ..."
-        time.sleep(1)
-
-        # Get response from LLM
         result = conversational_chain({
             "question": user_input,
             "chat_history": st.session_state.chat_history
         })
         answer = result["answer"]
+        st.session_state.chat_messages.append(("assistant", answer))
         st.session_state.chat_history.append((user_input, answer))
 
-        # Typing effect for assistant reply
-        displayed_text = ""
-        for word in answer.split():
-            displayed_text += word + " "
-            st.session_state["temp_assistant_reply"] = displayed_text.strip()
-            time.sleep(0.03)
-
-        # Finalize message into chat history
-        st.session_state.chat_messages.append(("assistant", answer))
-        st.session_state.pop("temp_assistant_reply", None)
-
-    # Clear user input box
     st.session_state["user_input"] = ""
 
 st.text_input(
