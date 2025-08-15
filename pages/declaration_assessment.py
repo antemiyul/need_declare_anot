@@ -37,7 +37,7 @@ bringing_liquor = st.radio(
     ["No", "Yes"], horizontal=True, key="ndn_bringing_liquor"
 )
 
-check_btn = st.button("✅ Check My Allowance", use_container_width=True, key="ndn_check_btn")
+check_btn = st.button("Check My Allowance", use_container_width=True, key="ndn_check_btn")
 
 def get_channel_icon(channel):
     return "🟢 Green Channel" if channel == "Green" else "🔴 Red Channel"
@@ -49,7 +49,7 @@ if check_btn:
         gst_channel = "Red"
     else:
         gst_limit = 500 if away_48 == "48 hours or more" else 100
-        gst_status = f"✅ Eligible for S${gst_limit} GST relief. Declare if goods exceed this amount."
+        gst_status = f"Eligible for S${gst_limit} GST relief. Declare if goods exceed this amount."
         gst_channel = "Green"
 
     # Determine Liquor outcome
@@ -60,10 +60,10 @@ if check_btn:
     )
 
     if bringing_liquor == "No":
-        liquor_status = "✅ Not bringing liquor."
+        liquor_status = "Not bringing liquor."
         liquor_channel = "Green"
     elif liquor_eligible:
-        liquor_status = """✅ Eligible for duty-free: choose one of the following:<br>
+        liquor_status = """Eligible for duty-free: choose one of the following:<br>
 <ul style='margin-top: 0.5rem; margin-bottom: 0.5rem;'>
     <li>1L Spirits + 1L Wine</li>
     <li>1L Spirits + 1L Beer</li>
@@ -74,11 +74,11 @@ if check_btn:
 Declare if you exceed."""
         liquor_channel = "Green"
     else:
-        liquor_status = "❌ Not eligible for duty-free liquor. Must declare."
+        liquor_status = "Not eligible for duty-free liquor. Must declare."
         liquor_channel = "Red"
 
     # Determine Cigarettes outcome
-    cigs_status = "❌ No duty-free concession for cigarettes or tobacco. Must declare."
+    cigs_status = "No duty-free concession for cigarettes or tobacco. Must declare, even for Singapore Duty Paid cigarettes"
     cigs_channel = "Red"
 
 
